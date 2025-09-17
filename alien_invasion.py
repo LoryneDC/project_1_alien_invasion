@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
+from greenalien import GreenAlien
 class AlienInvasion:
     """Overall class to manage assets and behavior."""
 
@@ -17,21 +18,25 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
 
         self.ship = Ship(self)
-
-        # Set the background color.
-        self.bg_color = (230, 230, 230)
+        self.greenalien = GreenAlien(self)
 
     def run_game(self):
         """Start the main loop for the game."""
         while True:
-            # Watch for keyboard and mouse events.
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self._check_events()
+            self._update_screen()
+
+    def _check_events(self):
+        """Respond to keypresses and mouse events."""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
                     
-            # Redraw the screen during each pass through the loop.
+    def _update_screen(self):
+            """Update images on the screen, and flip to the new screen."""
             self.screen.fill(self.settings.bg_color)
             self.ship.blitme()
+            self.greenalien.blitme()
 
             # Make the most recently drawn screen visible.
             pygame.display.flip()
