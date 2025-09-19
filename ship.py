@@ -7,12 +7,13 @@ class Ship:
         """Initialize the ship and set its starting position."""
         self.screen = ai_game.screen
         self.settings = ai_game.settings
+        self.screen_rect = ai_game.screen.get_rect()
 
         # Load the original ship image
         original_image = pygame.image.load('ship.bmp')
 
-        # 🔹 Scale relative to screen size (smaller: 1/20 of screen width)
-        scale_width = self.screen_rect.width // 30
+        # 🔹 Escalamos la nave para que no ocupe tanto espacio (1/20 del ancho de la pantalla)
+        scale_width = self.screen_rect.width // 20
         scale_height = int(original_image.get_height() * (scale_width / original_image.get_width()))
 
         # Apply scaling
@@ -25,14 +26,12 @@ class Ship:
         # Store a decimal value for the ship's horizontal position.
         self.x = float(self.rect.x)
 
-
-        # Movement flag
+        # Movement flags
         self.moving_right = False
         self.moving_left = False
 
     def update(self):
         """Update the ship's position based on the movement flag."""
-        # Update the ship's x value, not the rect.
         if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.settings.ship_speed
         if self.moving_left and self.rect.left > 0:
