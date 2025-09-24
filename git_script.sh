@@ -1,18 +1,18 @@
 #!/usr/bin/env bash
 
-# Configuración de estilo mejorada
+# Enhanced style configuration
 bold=$(tput bold)
 reset=$(tput sgr0)
 
-# Colores Andrómeda mejorados
-color_title="\033[1;38;5;111m"    # Azul cielo
-color_option="\033[1;38;5;141m"   # Morado suave
-color_success="\033[1;38;5;150m"  # Verde menta
-color_error="\033[1;38;5;203m"    # Rojo coral
-color_input="\033[1;38;5;122m"    # Cian brillante
-color_branch="\033[1;38;5;183m"   # Morado claro
+# Improved Andromeda colors
+color_title="\033[1;38;5;111m"    # Sky blue
+color_option="\033[1;38;5;141m"   # Soft purple
+color_success="\033[1;38;5;150m"  # Mint green
+color_error="\033[1;38;5;203m"    # Coral red
+color_input="\033[1;38;5;122m"    # Bright cyan
+color_branch="\033[1;38;5;183m"   # Light purple
 
-# Función para mostrar el encabezado pixelado
+# Function to display the pixelated header
 show_header() {
   clear
   echo -e "${color_title}"
@@ -24,58 +24,58 @@ show_header() {
 
 show_header
 
-# Verificar repo git
+# Verify Git repository
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-  echo -e "${color_error}✖ Error: No estás en un repositorio Git${reset}"
+  echo -e "${color_error}✖ Error: You are not inside a Git repository${reset}"
   exit 1
 fi
 
-# Obtener branch actual
+# Get current branch
 current_branch=$(git branch --show-current)
 
-# Paso 1: Git Add
-echo -e "${color_option}⋆ ${bold}Paso 1/3:${reset}${color_option} Añadiendo cambios (git add)...${reset}"
+# Step 1: Git Add
+echo -e "${color_option}⋆ ${bold}Step 1/3:${reset}${color_option} Adding changes (git add)...${reset}"
 git add .
 add_status=$?
 
 if [ $add_status -ne 0 ]; then
-  echo -e "${color_error}✖ Error en git add${reset}"
+  echo -e "${color_error}✖ Error in git add${reset}"
   exit 1
 fi
 
-# Paso 2: Git Commit
-echo -e "\n${color_option}⋆ ${bold}Paso 2/3:${reset}${color_option} Creando commit...${reset}"
-echo -e "${color_input}🌱 Mensaje del commit:${reset} "
+# Step 2: Git Commit
+echo -e "\n${color_option}⋆ ${bold}Step 2/3:${reset}${color_option} Creating commit...${reset}"
+echo -e "${color_input}🌱 Commit message:${reset} "
 read -p "   " commit_message
 
 if [ -z "$commit_message" ]; then
-  commit_message="Actualización del checklist"
+  commit_message="Checklist update"
 fi
 
 git commit -m "$commit_message"
 commit_status=$?
 
-# Paso 3: Git Push
+# Step 3: Git Push
 if [ $commit_status -eq 0 ]; then
-  echo -e "\n${color_option}⋆ ${bold}Paso 3/3:${reset}${color_option} Subiendo cambios a ${color_branch}${current_branch}${color_option}...${reset}"
+  echo -e "\n${color_option}⋆ ${bold}Step 3/3:${reset}${color_option} Pushing changes to ${color_branch}${current_branch}${color_option}...${reset}"
   git push origin $current_branch
   push_status=$?
 else
-  echo -e "${color_error}✖ Error en git commit${reset}"
+  echo -e "${color_error}✖ Error in git commit${reset}"
   exit 1
 fi
 
-# Resultado final
+# Final result
 show_header
 if [ $push_status -eq 0 ]; then
-  echo -e "${color_success}✔ ¡Cambios subidos a GitHub!${reset}"
+  echo -e "${color_success}✔ Changes successfully pushed to GitHub!${reset}"
   echo -e "\n${color_option}↳ Branch:  ${color_branch}${current_branch}"
-  echo -e "${color_option}↳ Mensaje: ${reset}\"$commit_message\""
-  echo -e "\n${color_success}♪ Todos los cambios están en la nube ♪${reset}"
+  echo -e "${color_option}↳ Message: ${reset}\"$commit_message\""
+  echo -e "\n${color_success}♪ All changes are now in the cloud ♪${reset}"
 else
-  echo -e "${color_error}✖ Error en git push${reset}"
-  echo -e "\n${color_option}Intenta manualmente: ${reset}git push origin ${current_branch}"
+  echo -e "${color_error}✖ Error in git push${reset}"
+  echo -e "\n${color_option}Try manually: ${reset}git push origin ${current_branch}"
 fi
 
-echo -e "\n${color_title}Presiona cualquier tecla para salir...${reset}"
+echo -e "\n${color_title}Press any key to exit...${reset}"
 read -n 1 -s
